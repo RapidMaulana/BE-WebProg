@@ -1,18 +1,36 @@
 <?php
 
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('recipes')->group(function () {
-    // CRUD dasar
-    Route::get('/', [RecipeController::class, 'index']);              // Ambil semua resep
-    Route::post('/', [RecipeController::class, 'store']);             // Buat resep baru
-    Route::get('/{id}', [RecipeController::class, 'show']);           // Ambil detail resep
-    Route::put('/{id}', [RecipeController::class, 'update']);         // Update resep
-    Route::delete('/{id}', [RecipeController::class, 'destroy']);     // Hapus resep
+// Routes tanpa authentication (Public)
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login']);
 
-    // Filter dan search
-    Route::get('/category/{category}', [RecipeController::class, 'filterByCategory']);
-    Route::get('/difficulty/{difficulty}', [RecipeController::class, 'filterByDifficulty']);
-    Route::get('/search', [RecipeController::class, 'search']);
+// Routes dengan authentication (Protected)
+Route::middleware('auth:sanctum')->group(function () {
+    // Auth routes
+    Route::get('/auth/profile', [AuthController::class, 'profile']);
+    Route::put('/auth/profile', [AuthController::class, 'updateProfile']);
+    Route::put('/auth/password', [AuthController::class, 'updatePassword']);
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+
+    // Wishlist routes (spesifik dulu, baru parameter)
+    Route::get('/wishlists', [WishlistController::class, 'index']);
+    Route::post('/wishlists', [WishlistController::class, 'store']);
+    Route::get('/wishlists/recipes', [WishlistController::class, 'getWishlistRecipes']);
+    Route::get('/wishlists/check/{recipeId}', [WishlistController::class, 'check']);
+    Route::delete('/wishlists/{recipeId}', [WishlistController::class, 'destroy']);
 });
+
+// Recipe routes (Public)
+Route::get('/recipes', [RecipeController::class, 'index']);
+Route::post('/recipes', [RecipeController::class, 'store']);
+Route::get('/recipes/{id}', [RecipeController::class, 'show']);
+Route::put('/recipes/{id}', [RecipeController::class, 'update']);
+Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
+Route::get('/recipes/category/{category}', [RecipeController::class, 'filterByCategory']);
+Route::get('/recipes/difficulty/{difficulty}', [RecipeController::class, 'filterByDifficulty']);
+Route::get('/recipes/search', [RecipeController::class, 'search']);
