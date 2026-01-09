@@ -8,11 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HandleCors
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
         $allowedOrigins = [
@@ -21,6 +16,7 @@ class HandleCors
             'http://127.0.0.1:3000',
             'http://127.0.0.1:5173',
             'http://127.0.0.1:8000',
+            'https://webprog-fe.vercel.app',  // ADD THIS
         ];
 
         $origin = $request->headers->get('origin');
@@ -28,7 +24,7 @@ class HandleCors
         $response = $next($request);
 
         if (in_array($origin, $allowedOrigins)) {
-            $response->header('Access-Control-Allow-Origin', 'http://localhost:5173');
+            $response->header('Access-Control-Allow-Origin', $origin);  // Changed from hardcoded localhost
             $response->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
             $response->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
             $response->header('Access-Control-Max-Age', '3600');
