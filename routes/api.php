@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => 'cors'],function(){
+
     // Routes tanpa authentication (Public)
     Route::post('/auth/register', [AuthController::class, 'register']);
     Route::post('/auth/login', [AuthController::class, 'login']);
@@ -35,4 +35,3 @@ Route::group(['middleware' => 'cors'],function(){
     Route::get('/recipes/category/{category}', [RecipeController::class, 'filterByCategory']);
     Route::get('/recipes/difficulty/{difficulty}', [RecipeController::class, 'filterByDifficulty']);
     Route::get('/recipes/search', [RecipeController::class, 'search']);
-});
