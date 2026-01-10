@@ -20,7 +20,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => array_filter([
-        env('FRONTEND_URL'),
+        'https://webprog-fe.vercel.app/',
         'http://localhost:5173',
     ]),
 
